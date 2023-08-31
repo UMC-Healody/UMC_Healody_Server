@@ -34,23 +34,20 @@ public class CareUserApiController {
     @PostMapping
     public SuccessResponse<Long> create(@RequestPart("requestDTO") CareUserRequestDTO requestDTO, @RequestPart("image") MultipartFile image) throws IOException {
         Long careUerId = careUserService.create(requestDTO, image);
-        return (careUerId != null) ? new SuccessResponse<>(SuccessStatus.CARE_USER_CREATE, careUerId) :
-                new SuccessResponse<>(SuccessStatus.CARE_USER_FAILURE);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, careUerId);
     }
 
     @PutMapping
-    public SuccessResponse<Long> update(@RequestPart("requestDTO")  CareUserRequestDTO requestDTO, @RequestPart("image")  MultipartFile image) throws IOException {
+    public SuccessResponse<Long> update(@RequestPart CareUserRequestDTO requestDTO, @RequestPart MultipartFile image) throws IOException {
         boolean result = careUserService.update(requestDTO.getId(), requestDTO, image);
-        return (result) ? new SuccessResponse<>(SuccessStatus.CARE_USER_UPDATE, requestDTO.getId()) :
-                new SuccessResponse<>(SuccessStatus.CARE_USER_FAILURE, requestDTO.getId()) ;
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, requestDTO.getId());
     }
 
 
     @DeleteMapping("/{careuserId}")
     public SuccessResponse<Void> delete(@PathVariable Long careuserId) {
         boolean result = careUserService.delete(careuserId);
-        return (result ) ? new SuccessResponse<>(SuccessStatus.CARE_USER_DELETE) :
-                new SuccessResponse<>(SuccessStatus.CARE_USER_FAILURE) ;
+        return new SuccessResponse<>(SuccessStatus.SUCCESS);
     }
 
     // 돌봄계정 기록 CRUD
