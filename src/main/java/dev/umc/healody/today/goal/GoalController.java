@@ -3,10 +3,12 @@ package dev.umc.healody.today.goal;
 import dev.umc.healody.common.SuccessResponse;
 import dev.umc.healody.common.SuccessStatus;
 import dev.umc.healody.today.goal.dto.GoalRequestDto;
-import dev.umc.healody.today.goal.dto.GoalResponseDto;
 import dev.umc.healody.today.goal.dto.RecordsRequestDto;
+import dev.umc.healody.today.goal.dto.RecordsResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import static dev.umc.healody.common.FindUserInfo.getCurrentUserId;
 
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -17,20 +19,20 @@ public class GoalController {
 
     @PostMapping("/goal")
     public SuccessResponse<String> createGoal(@RequestBody GoalRequestDto requestDto) {
-        String goalMessage = goalService.createGoal(requestDto.getUserId(), requestDto);
+        String goalMessage = goalService.createGoal(getCurrentUserId(), requestDto);
         return new SuccessResponse<>(SuccessStatus.GOAL_CREATE, goalMessage);
     }
 
     @GetMapping("/goal/{goalId}")
-    public SuccessResponse<GoalResponseDto> findGoal(@PathVariable Long goalId) {
-        goalService.createRecord(goalId);
-        return new SuccessResponse<>(SuccessStatus.GOAL_GET);
+    public SuccessResponse<RecordsResponseDto> findGoal(@PathVariable Long goalId) {
+        RecordsResponseDto responseDto = goalService.createRecord(goalId);
+        return new SuccessResponse<>(SuccessStatus.GOAL_GET, responseDto);
     }
 
     @GetMapping("/goal/{goalId}/{date}")
-    public SuccessResponse dateFindGoal(@PathVariable Long goalId, @PathVariable String date) {
-        goalService.dateCreateRecord(goalId, date);
-        return new SuccessResponse(SuccessStatus.GOAL_GET);
+    public SuccessResponse<RecordsResponseDto> dateFindGoal(@PathVariable Long goalId, @PathVariable String date) {
+        RecordsResponseDto responseDto = goalService.dateCreateRecord(goalId, date);
+        return new SuccessResponse(SuccessStatus.GOAL_GET, responseDto);
     }
 
     @PatchMapping("/goal/{goalId}")

@@ -2,16 +2,18 @@ package dev.umc.healody.user.controller;
 
 import dev.umc.healody.common.SuccessResponse;
 import dev.umc.healody.common.SuccessStatus;
+import dev.umc.healody.user.dto.KakaoLoginDto;
+import dev.umc.healody.user.dto.ingaDto;
 import dev.umc.healody.user.dto.UserDto;
+import dev.umc.healody.user.repository.UserRepository;
 import dev.umc.healody.user.service.EmailService;
 import dev.umc.healody.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
-@Controller
+@RestController
 @RequestMapping("/api/auth")
 public class UserController {
     private final UserService userService;
@@ -20,7 +22,7 @@ public class UserController {
 
 
     @Autowired
-    public UserController(UserService userService, EmailService emailService) {
+    public UserController(UserService userService, EmailService emailService, UserRepository userRepository, KakaoLoginDto loginDto, ingaDto ingaDto) {
         this.userService = userService;
         this.emailService = emailService;
     }
@@ -28,6 +30,13 @@ public class UserController {
     @ResponseBody
     @PostMapping("/join")
     public SuccessResponse<String> registerUser(@Valid @RequestBody UserDto userDTO) {
+        userService.registerUser(userDTO);
+        return new SuccessResponse<>(SuccessStatus.USER_CREATE);
+    }
+
+    @ResponseBody
+    @PostMapping("/joins")
+    public SuccessResponse<String> registerUsers(@Valid @RequestBody UserDto userDTO) {
         userService.registerUser(userDTO);
         return new SuccessResponse<>(SuccessStatus.USER_CREATE);
     }
@@ -93,5 +102,6 @@ public class UserController {
 //        Long userId = userService.findUserIdByPhone(phone);
 //        return new SuccessResponse<>(SuccessStatus.SUCCESS, userId);
 //    }
+
 
 }

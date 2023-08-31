@@ -32,7 +32,7 @@ public class CareUserApiController {
 
     //돌봄 추가
     @PostMapping
-    public SuccessResponse<Long> create(@RequestPart CareUserRequestDTO requestDTO, @RequestPart MultipartFile image) throws IOException {
+    public SuccessResponse<Long> create(@RequestPart("requestDTO") CareUserRequestDTO requestDTO, @RequestPart("image") MultipartFile image) throws IOException {
         Long careUerId = careUserService.create(requestDTO, image);
         return (careUerId != null) ? new SuccessResponse<>(SuccessStatus.CARE_USER_CREATE, careUerId) :
                 new SuccessResponse<>(SuccessStatus.CARE_USER_FAILURE);
