@@ -17,8 +17,9 @@ public class FamilyApiController {
     public SuccessResponse<Long> addFamily(@RequestBody FamilyRequestDTO familyDTORequest){
         Long userId = userService.findUserIdByPhone(familyDTORequest.getUserPhone());
         FamilyRequestDTO request = familyDTORequest.builder().userId(userId).homeId(familyDTORequest.getHomeId()).build();
-
-        return new SuccessResponse<>(SuccessStatus.SUCCESS, familyService.create(request));
+        Long result = familyService.create(request);
+        return (result != null) ? new SuccessResponse<>(SuccessStatus.FAMILY_CREATE, result) :
+                new SuccessResponse<>(SuccessStatus.FAMILY_FAILURE);
     }
 
     @PostMapping("/update/{changeHomeId}")
