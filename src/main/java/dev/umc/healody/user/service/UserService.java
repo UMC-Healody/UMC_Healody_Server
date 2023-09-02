@@ -75,7 +75,7 @@ public class UserService {
         user.setNickname(userDto.getNickname());
 //        user.setPassword(userDto.getPassword());
         user.setPassword(passwordEncoder.encode((userDto.getPassword())));
-        System.out.println(passwordEncoder.encode((userDto.getPassword())));
+//        System.out.println(passwordEncoder.encode((userDto.getPassword())));
         user.setActivated(true);
         user.setAuthorities(Collections.singleton(authority));
 
