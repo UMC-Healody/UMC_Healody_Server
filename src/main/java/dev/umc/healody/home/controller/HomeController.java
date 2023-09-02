@@ -89,6 +89,10 @@ public class HomeController {
         List<CareUserResponseDTO> careUserList = careUserService.findCareUsers(homeId);
 
         Map<String, List<String>> infoMap = new HashMap<>();
+
+        List<String> homeInfoList = new ArrayList<>();
+        homeInfoList.add(homeService.getHomeInfo(homeId).getInfo());
+
         List<String> userInfoList = userList.stream()
                 .filter(id -> !id.equals(userId))
                 .map(userService::findUser)
@@ -98,7 +102,7 @@ public class HomeController {
         List<String> careUserInfoList = careUserList.stream()
                 .map(CareUserResponseDTO::toString)
                 .collect(Collectors.toList());
-
+        infoMap.put("home", homeInfoList);
         infoMap.put("user", userInfoList);
         infoMap.put("care-user", careUserInfoList);
         return infoMap;
