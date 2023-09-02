@@ -11,7 +11,9 @@ import dev.umc.healody.user.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 
 import static dev.umc.healody.common.FindUserInfo.getCurrentUserId;
@@ -35,9 +37,10 @@ public class UserInfoController {
     }
 
     @PatchMapping("/profile")
-    public SuccessResponse<UpdateProfileDto> updateProfile(@Valid @RequestBody UpdateProfileDto request){
+    public SuccessResponse<UpdateProfileDto> updateProfile(@Valid @RequestPart("request")  UpdateProfileDto request, @RequestPart("image") MultipartFile image) throws IOException {
         Long userId = getCurrentUserId();
-        UpdateProfileDto updateUser = userService.updateProfile(userId, request);
+
+        UpdateProfileDto updateUser = userService.updateProfile(userId, request, image);
         return new SuccessResponse<>(SuccessStatus.PROFILE_UPDATE, updateUser);
     }
 
