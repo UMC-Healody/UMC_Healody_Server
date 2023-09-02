@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 @Data
@@ -61,14 +63,21 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
     private Set<Authority> authorities;
 
-    @Override
-    public String toString() {
-        return "{" +
-                "id=" + userId +
-                ", name='" + name + '\'' +
-                ", image='" + image + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", message='" + message + '\'' +
-                '}';
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", this.userId);
+        map.put("name",this.name);
+        map.put("image",this.image);
+        map.put("nickname",this.nickname);
+        map.put("message",this.message);
+        return map;
+//        return "{" +
+//                "id=" + userId +
+//                ", name='" + name + '\'' +
+//                ", image='" + image + '\'' +
+//                ", nickname='" + nickname + '\'' +
+//                ", message='" + message + '\'' +
+//                '}';
     }
 }
