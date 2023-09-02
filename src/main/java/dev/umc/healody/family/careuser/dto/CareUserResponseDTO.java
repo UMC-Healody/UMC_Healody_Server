@@ -5,6 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Getter
 @NoArgsConstructor
 public class CareUserResponseDTO {
@@ -23,7 +26,7 @@ public class CareUserResponseDTO {
         this.message = message;
     }
 
-    public CareUserResponseDTO toDTO(CareUser careUser){
+    public CareUserResponseDTO toDTO(CareUser careUser) {
         return CareUserResponseDTO.builder()
                 .id(careUser.getId())
                 .message(careUser.getMessage())
@@ -33,13 +36,22 @@ public class CareUserResponseDTO {
                 .build();
     }
 
-    @Override
-    public String toString() {
-        return "{" +
-                "id=" + id +
-                ", image='" + image + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", message='" + message + '\'' +
-                '}';
+//    @Override
+//    public String toString() {
+//        return "{" +
+//                "id=" + id +
+//                ", image='" + image + '\'' +
+//                ", nickname='" + nickname + '\'' +
+//                ", message='" + message + '\'' +
+//                '}';
+//    }
+
+    public Map<String, String> toMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("id", String.valueOf(this.id));
+        map.put("image", this.image);
+        map.put("nickname", this.nickname);
+        map.put("message", this.message);
+        return map;
     }
 }

@@ -7,14 +7,12 @@ import dev.umc.healody.family.FamilyResponseDTO;
 import dev.umc.healody.family.FamilyService;
 import dev.umc.healody.family.careuser.dto.CareUserResponseDTO;
 import dev.umc.healody.family.careuser.CareUserService;
+import dev.umc.healody.home.domain.Home;
 import dev.umc.healody.home.dto.HomeDto;
 import dev.umc.healody.home.service.HomeService;
-import jakarta.servlet.http.HttpServletRequest;
 import dev.umc.healody.user.entity.User;
 import dev.umc.healody.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -43,14 +41,15 @@ public class HomeController {
         return new SuccessResponse<>(SuccessStatus.HOME_CREATED, newHome);
     }
     @GetMapping("/home/{userId}") // 집 조회 GET
-    public SuccessResponse<Map<String, Map<String, List<String>>>> viewMyFamily(@PathVariable Long userId) {
+    public SuccessResponse<Map<String, Map<String, Map<String, Object>>>> viewMyFamily(@PathVariable Long userId) {
         List<FamilyResponseDTO> familyList = familyService.searchFamily(userId);
 
-        Map<String, Map<String, List<String>>> resultMap = familyList.stream()
-                .collect(Collectors.toMap(
-                        family -> homeService.getHomeInfo(family.getHomeId()).getName(),
-                        family -> getFamilyInfo(family.getHomeId(), userId)
-                ));
+        Map<String, Map<String, Map<String, Object>>> resultMap = new HashMap<>();
+        for (FamilyResponseDTO family : familyList) {
+            if (resultMap.put(homeService.getHomeInfo(family.getHomeId()).getName(), getFamilyInfo(family.getHomeId(), userId)) != null) {
+                throw new IllegalStateException("Duplicate key");
+            }
+        }
         return new SuccessResponse<>(SuccessStatus.HOME_READ, resultMap);
     }
     
@@ -84,27 +83,47 @@ public class HomeController {
         return new SuccessResponse<>(SuccessStatus.NOT_HOME_ADMIN);
     }
 
-    private Map<String, List<String>> getFamilyInfo(Long homeId, Long userId) {
+    private Map<String, Map<String, Object>> getFamilyInfo(Long homeId, Long userId) {
         List<Long> userList = familyService.searchUserId(homeId);
         List<CareUserResponseDTO> careUserList = careUserService.findCareUsers(homeId);
 
-        Map<String, List<String>> infoMap = new HashMap<>();
+        Map<String, Map<String, Object>> infoMap = new HashMap<>();
 
         List<String> homeInfoList = new ArrayList<>();
         homeInfoList.add(homeService.getHomeInfo(homeId).getInfo());
 
-        List<String> userInfoList = userList.stream()
-                .filter(id -> !id.equals(userId))
-                .map(userService::findUser)
-                .map(User::toString)
-                .collect(Collectors.toList());
+//        List<String> userInfoList = userList.stream()
+//                .filter(id -> !id.equals(userId))
+//                .map(userService::findUser)
+//                .map(User::toString)
+//                .collect(Collectors.toList());
+//
+//        List<String> careUserInfoList = careUserList.stream()
+//                .map(CareUserResponseDTO::toString)
+//                .collect(Collectors.toList());
 
-        List<String> careUserInfoList = careUserList.stream()
-                .map(CareUserResponseDTO::toString)
-                .collect(Collectors.toList());
-        infoMap.put("home", homeInfoList);
-        infoMap.put("user", userInfoList);
-        infoMap.put("care-user", careUserInfoList);
+        Map<String, Object> homeInfoMap = new HashMap<>();
+        HomeDto home = homeService.getHomeInfo(homeId); // 홈 정보 가져오기
+        homeInfoMap.put("home_id", home.getHomeId());
+        homeInfoMap.put("home_info", home.getInfo());
+        infoMap.put("home", homeInfoMap);
+
+
+        Map<String, Object> userInfoMap = new HashMap<>();
+        for (Long id : userList) {
+            if (!id.equals(userId)) {
+                User user = userService.findUser(id);
+                userInfoMap.put("user_" + id, user.toMap());
+            }
+        }
+
+        Map<String, Object> careUserInfoMap = new HashMap<>();
+        for (CareUserResponseDTO careUser : careUserList) {
+            careUserInfoMap.put("care_user_" + careUser.getId(), careUser.toMap());
+        }
+        infoMap.put("home", homeInfoMap);
+        infoMap.put("user", userInfoMap);
+        infoMap.put("care-user", careUserInfoMap);
         return infoMap;
     }
 }
