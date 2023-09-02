@@ -6,31 +6,27 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.umc.healody.user.dto.*;
 import dev.umc.healody.user.entity.Authority;
 import dev.umc.healody.user.entity.User;
-import dev.umc.healody.user.jwt.JwtFilter;
 import dev.umc.healody.user.jwt.TokenProvider;
 import dev.umc.healody.user.model.KakaoProfile;
 import dev.umc.healody.user.model.OAuthToken;
 import dev.umc.healody.user.repository.UserRepository;
-import jakarta.validation.Valid;
+import dev.umc.healody.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 public class UserService {
@@ -47,14 +43,16 @@ public class UserService {
 
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final TokenProvider tokenProvider;
+    private final FileUploadUtil fileUploadUtil;
 
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManagerBuilder authenticationManagerBuilder, TokenProvider tokenProvider, FileUploadUtil fileUploadUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManagerBuilder = authenticationManagerBuilder;
         this.tokenProvider = tokenProvider;
+        this.fileUploadUtil = fileUploadUtil;
     }
 
     public void registerUser(UserDto userDto) {
@@ -260,24 +258,27 @@ public class UserService {
 //        return userRepository.findOneWithAuthoritiesByPhone(phone);
 //    }
 
-    public UpdateProfileDto updateProfile(Long userId, UpdateProfileDto userDto) {
+    public UpdateProfileDto updateProfile(Long userId, UpdateProfileDto userDto, MultipartFile image) throws IOException {
         Optional<User> existUser = userRepository.findById(userId);
         User user = new User();
         if(existUser.isPresent()){
             user = existUser.get();
         }
+        String imgUrl = "";
+        if(image != null) imgUrl = fileUploadUtil.uploadFile("profile", image);
+
         if(userDto.getNickname() != null){
             user.setNickname(userDto.getNickname());
         }
-        if(userDto.getImage() != null){
-            user.setImage(userDto.getImage());
+        if(image != null){
+            user.setImage(imgUrl);
         }
 
         User updatedUser = userRepository.save(user);
 
         return UpdateProfileDto.builder()
                 .nickname(updatedUser.getNickname())
-                .image(updatedUser.getImage())
+                .image(imgUrl)
                 .build();
     }
 
