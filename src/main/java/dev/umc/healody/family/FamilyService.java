@@ -1,5 +1,6 @@
 package dev.umc.healody.family;
 
+import dev.umc.healody.calender.FamilyCalenderResponseDto;
 import dev.umc.healody.home.domain.Home;
 import dev.umc.healody.home.repository.HomeRepository;
 import dev.umc.healody.user.entity.User;
@@ -8,12 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
-
-import static dev.umc.healody.common.FindUserInfo.getCurrentUserId;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +27,8 @@ public class FamilyService {
         Optional<Home> optionalHome = homeRepository.findById(requestDTO.getHomeId());
         User user = null;
         Home home = null;
+
+        System.out.println("home is empty = " + optionalHome.isEmpty());
 
         if(optionalUser.isPresent()) user = optionalUser.get();
         if(optionalHome.isPresent()) home = optionalHome.get();
@@ -60,6 +59,38 @@ public class FamilyService {
                         .userId(family.getUser().getUserId())
                         .homeId(family.getHome().getHomeId())
                         .build()).collect(Collectors.toList());
+    }
+
+    public List<FamilyCalenderResponseDto> searchFamilyInCalender(Long userId){
+        List<FamilyResponseDTO> familyList = searchFamily(userId);
+
+        List<FamilyCalenderResponseDto> familyResponseDto = new ArrayList<>();
+        Map<Long, String> mapList = new HashMap<Long, String>();
+
+        for(FamilyResponseDTO responseDTO : familyList) {
+            Long homeId = responseDTO.getHomeId();
+            List<Long> longs = searchUserId(homeId);
+
+            for(Long id : longs) {
+                User findUser = userRepository.findByUserId(id);
+
+                if(findUser.getUserId() == userId)
+                    continue;
+
+                if(mapList.containsKey(findUser.getUserId()))
+                    continue;
+
+                mapList.put(findUser.getUserId(), findUser.getName());
+
+                familyResponseDto.add(FamilyCalenderResponseDto
+                        .builder()
+                        .userId(findUser.getUserId())
+                        .name(findUser.getName())
+                        .build());
+            }
+        }
+
+        return familyResponseDto;
     }
 
     @Transactional
