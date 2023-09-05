@@ -1,6 +1,5 @@
-package dev.umc.healody.calender;
+package dev.umc.healody.calender.dto;
 
-import dev.umc.healody.family.Family;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

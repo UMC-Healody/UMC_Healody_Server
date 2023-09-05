@@ -1,6 +1,6 @@
 package dev.umc.healody.family;
 
-import dev.umc.healody.calender.FamilyCalenderResponseDto;
+import dev.umc.healody.calender.dto.FamilyCalenderResponseDto;
 import dev.umc.healody.home.domain.Home;
 import dev.umc.healody.home.repository.HomeRepository;
 import dev.umc.healody.user.entity.User;

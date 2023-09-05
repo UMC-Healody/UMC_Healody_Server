@@ -56,6 +56,22 @@ public class TodoService {
         return responseDto.toDto(todoList);
     }
 
+    public List<TodoResponseDto> findTodoByUserAndDate(Long userId, String dateString) {
+        // String to Date
+        Date date = new Date();
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            date = format.parse(dateString);
+        } catch (ParseException e) {
+            System.out.println("예외 처리");
+        }
+
+        List<Todo> todoList = todoRepository.findAllByUser_UserIdAndDate(userId, date);
+
+        TodoResponseDto responseDto = new TodoResponseDto();
+        return responseDto.toDto(todoList);
+    }
+
     @Transactional
     public Long updateTodo(Long userId, Long todoId, TodoRequestDto requestDto) {
         Optional<User> byUserId = userRepository.findById(userId);
