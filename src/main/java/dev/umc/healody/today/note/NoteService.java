@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -123,6 +124,23 @@ public class NoteService {
 
         SymptomResponseDto responseDto = new SymptomResponseDto();
         return responseDto.toDto(symptom);
+    }
+
+    public List<NoteResponseDto> findNoteByUserAndDate(Long userId, String dateString) {
+        // String to Date
+        Date start = new Date();
+        Date end = new Date();
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            start = format.parse(dateString + " 00:00");
+            end = format.parse(dateString + " 23:59");
+        } catch (ParseException e) {
+            System.out.println("예외 처리");
+        }
+        List<Note> noteList = noteRepository.findAllByDateBetweenAndUser_UserId(start, end, userId);
+
+        NoteResponseDto responseDto = new NoteResponseDto();
+        return responseDto.toDto(noteList);
     }
 
     @Transactional

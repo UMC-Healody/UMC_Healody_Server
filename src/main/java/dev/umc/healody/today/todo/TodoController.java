@@ -18,12 +18,6 @@ public class TodoController {
 
     private final TodoService todoService;
 
-    @PostMapping("/todo")
-    public SuccessResponse<Long> createTodo(@RequestBody TodoRequestDto requestDto) {
-        Long todoId = todoService.createTodo(getCurrentUserId(), requestDto);
-        return new SuccessResponse<>(SuccessStatus.TODO_CREATE, todoId);
-    }
-
     @GetMapping("/todo/{userId}")
     public SuccessResponse<List<TodoResponseDto>> findTodo(@PathVariable Long userId) {
         List<TodoResponseDto> responseDtoList = todoService.findTodayTodo(userId);
