@@ -36,9 +36,11 @@ public class HomeController {
     public SuccessResponse<HomeDto> createHome(@RequestBody HomeDto homeDto){
         setUserService(userService);
         Long adminId = getCurrentUserId();
-        HomeDto newHome = homeService.createHome(homeDto, adminId);
-        familyService.create(FamilyRequestDTO.builder().userId(adminId).homeId(newHome.homeId).build());
-        return new SuccessResponse<>(SuccessStatus.HOME_CREATED, newHome);
+        if ( userService.findUser(adminId).getFamilyCnt() < 3 ) {
+            HomeDto newHome = homeService.createHome(homeDto, adminId);
+            familyService.create(FamilyRequestDTO.builder().userId(adminId).homeId(newHome.homeId).build());
+            return new SuccessResponse<>(SuccessStatus.HOME_CREATED, newHome);
+        } return new SuccessResponse<>(SuccessStatus.FAMILY_OVER_FAILURE, null);
     }
     @GetMapping("/home/{userId}") // 집 조회 GET
     public SuccessResponse<Map<String, Map<String, Map<String, Object>>>> viewMyFamily(@PathVariable Long userId) {
@@ -91,16 +93,6 @@ public class HomeController {
 
         List<String> homeInfoList = new ArrayList<>();
         homeInfoList.add(homeService.getHomeInfo(homeId).getInfo());
-
-//        List<String> userInfoList = userList.stream()
-//                .filter(id -> !id.equals(userId))
-//                .map(userService::findUser)
-//                .map(User::toString)
-//                .collect(Collectors.toList());
-//
-//        List<String> careUserInfoList = careUserList.stream()
-//                .map(CareUserResponseDTO::toString)
-//                .collect(Collectors.toList());
 
         Map<String, Object> homeInfoMap = new HashMap<>();
         HomeDto home = homeService.getHomeInfo(homeId); // 홈 정보 가져오기
