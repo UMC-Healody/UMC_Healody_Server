@@ -111,11 +111,11 @@ public class HomeController {
 
         Map<String, Object> careUserInfoMap = new HashMap<>();
         for (CareUserResponseDTO careUser : careUserList) {
-            careUserInfoMap.put("care_user_" + careUser.getId(), careUser.toMap());
+            careUserInfoMap.put("careUser_" + careUser.getId(), careUser.toMap());
         }
         infoMap.put("home", homeInfoMap);
         infoMap.put("user", userInfoMap);
-        infoMap.put("care-user", careUserInfoMap);
+        infoMap.put("careUser", careUserInfoMap);
         return infoMap;
     }
 }
