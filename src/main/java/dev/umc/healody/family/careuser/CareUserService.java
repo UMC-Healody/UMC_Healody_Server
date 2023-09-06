@@ -81,7 +81,7 @@ public class CareUserService {
                         .message(careUser.getMessage())
                         .homeId(careUser.getHome().getHomeId())
                         .nickname(careUser.getNickname())
-                        .image(careUser.getNickname())
+                        .image(careUser.getImage())
                         .build()).collect(Collectors.toList());
     }
 
