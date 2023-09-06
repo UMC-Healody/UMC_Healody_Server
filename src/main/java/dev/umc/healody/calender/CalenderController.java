@@ -45,9 +45,21 @@ public class CalenderController {
         return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDtoList);
     }
 
+    @GetMapping("/calender/note/{userId}/{date}")
+    public SuccessResponse<List<NoteResponseDto>> getNoteInCalender(@PathVariable Long userId, @PathVariable String date) {
+        List<NoteResponseDto> responseDtoList = noteService.findNoteByUserAndDate(userId, date);
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDtoList);
+    }
+
     @GetMapping("/calender/todo")
     public SuccessResponse<List<TodoResponseDto>> getTodoInCalender(@RequestBody CalenderFindDto findDto) {
         List<TodoResponseDto> responseDtoList = todoService.findTodoByUserAndDate(findDto.getUserId(), findDto.getDate());
+        return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDtoList);
+    }
+
+    @GetMapping("/calender/todo/{userId}/{date}")
+    public SuccessResponse<List<TodoResponseDto>> getTodoInCalender(@PathVariable Long userId, @PathVariable String date) {
+        List<TodoResponseDto> responseDtoList = todoService.findTodoByUserAndDate(userId, date);
         return new SuccessResponse<>(SuccessStatus.SUCCESS, responseDtoList);
     }
 }
