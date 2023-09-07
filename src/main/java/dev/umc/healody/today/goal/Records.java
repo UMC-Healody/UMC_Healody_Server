@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -25,14 +26,18 @@ public class Records {
     private String val;
     private String behavior;
     private Long days;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     @Builder
-    public Records(Goal goal, LocalDate today, String val, String behavior, Long days) {
+    public Records(Goal goal, LocalDate today, String val, String behavior, Long days, LocalDate startDate, LocalDate endDate) {
         this.goal = goal;
         this.today = today;
         this.val = val;
         this.behavior = behavior;
         this.days = days;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public void updateVal(String val) {
