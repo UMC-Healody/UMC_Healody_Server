@@ -12,13 +12,17 @@ public class RecordsResponseDto {
     private Long days;
     private String behavior;
     private String val;
+    private String startDate;
+    private String endDate;
 
     @Builder
-    public RecordsResponseDto(Long recordsId, Long days, String behavior, String val) {
+    public RecordsResponseDto(Long recordsId, Long days, String behavior, String val, String startDate, String endDate) {
         this.recordsId = recordsId;
         this.days = days;
         this.behavior = behavior;
         this.val = val;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public RecordsResponseDto toDto(Records records) {
@@ -27,6 +31,8 @@ public class RecordsResponseDto {
                 .days(records.getDays())
                 .behavior(records.getBehavior())
                 .val(records.getVal())
+                .startDate(records.getStartDate().toString())
+                .endDate(records.getEndDate().toString())
                 .build();
     }
 }
