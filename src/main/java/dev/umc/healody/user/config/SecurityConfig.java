@@ -62,6 +62,7 @@ public class SecurityConfig {
                         authorizeHttpRequests
                                 .requestMatchers("/api/auth/**").permitAll() // 인증 API만 허용
                                 .requestMatchers("/api/auth/kakao/**").permitAll() // 카카오 인증 허용
+                                .requestMatchers("/test").permitAll() // test API
 //                                .requestMatchers("/**").permitAll()
                                 .anyRequest().authenticated() // 다른 요청은 인증이 필요함
                 )
