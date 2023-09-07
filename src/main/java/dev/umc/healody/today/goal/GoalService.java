@@ -54,8 +54,9 @@ public class GoalService {
                     .val("0")
                     .behavior(goal.getBehavior().getDisplayValue())
                     .days(goal.getCnt() + 1)
+                    .startDate(goal.getStartDate())
+                    .endDate(goal.getEndDate())
                     .build();
-
             goal.plusCnt();
             recordsRepository.save(records);
         }
@@ -83,6 +84,8 @@ public class GoalService {
                     .val("0")
                     .behavior(goal.getBehavior().getDisplayValue())
                     .days(goal.getCnt() + 1)
+                    .startDate(goal.getStartDate())
+                    .endDate(goal.getEndDate())
                     .build();
             recordsRepository.save(records);
             goal.plusCnt();
