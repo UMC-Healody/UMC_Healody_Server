@@ -11,6 +11,16 @@
 
 <br/>
 
+## 📄 Documents
+
+✔️ [**ERD**](https://jaeyoungstudio.notion.site/ERD-39c149530b95492087b10455bcdbba81?pvs=4)
+
+✔️ [**API 명세서**](https://jaeyoungstudio.notion.site/API-a1cd31598f364508b375fb2c2eabb3bf?pvs=4)
+
+✔️ [**회의록 (백엔드)**](https://jaeyoungstudio.notion.site/9973d79229fb4304a93ac167cf895094?pvs=4)
+
+<br/>
+
 ## ⚔️ Tech Stacks
 📱 **Front-End :** 
 <img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=React&logoColor=white"> 
@@ -32,7 +42,7 @@
 <br/>
 
 ## 🏡 Server Architecture
-<img width = "80%" src="https://github.com/UMC-Healody/UMC_Healody_Server/assets/55044278/47291dda-ca0f-4533-b664-91ea3c82a021">
+<img width = "75%" src="https://github.com/UMC-Healody/UMC_Healody_Server/assets/55044278/47291dda-ca0f-4533-b664-91ea3c82a021">
 
 ## 🖼️ Introduction Page
-[<img width="80%" src="https://github-production-user-asset-6210df.s3.amazonaws.com/55044278/266886963-90a45fa1-03d0-46c0-b84d-4ef632177e68.png">](https://jaeyoungstudio.notion.site/HEALODY-3bf1e15838534ad39d3e7ee24c7f8d20?pvs=4)
+[<img width="75%" src="https://github-production-user-asset-6210df.s3.amazonaws.com/55044278/266886963-90a45fa1-03d0-46c0-b84d-4ef632177e68.png">](https://jaeyoungstudio.notion.site/HEALODY-3bf1e15838534ad39d3e7ee24c7f8d20?pvs=4)
